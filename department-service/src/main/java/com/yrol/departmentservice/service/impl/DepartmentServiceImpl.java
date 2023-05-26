@@ -2,6 +2,8 @@ package com.yrol.departmentservice.service.impl;
 
 import com.yrol.departmentservice.dto.DepartmentDto;
 import com.yrol.departmentservice.entity.Department;
+import com.yrol.departmentservice.exception.DepartmentAlreadyExistsException;
+import com.yrol.departmentservice.exception.ResourceNotFoundException;
 import com.yrol.departmentservice.mapper.AutoDepartmentMapper;
 import com.yrol.departmentservice.repository.DepartmentRepository;
 import com.yrol.departmentservice.service.DepartmentService;
@@ -23,6 +25,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         Optional<Department> departmentWithName = departmentRepository.findByDepartmentName(departmentDto.getDepartmentName());
 
+        if(departmentWithName.isPresent()) {
+            throw new DepartmentAlreadyExistsException(departmentDto.getDepartmentName());
+        }
+
         //convert department DTO to JPA entity and vice versa
         Department department = AutoDepartmentMapper.MAPPER.mapToDepartment(departmentDto);
         Department savedDepartment = departmentRepository.save(department);
@@ -38,13 +44,18 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDto getDepartmentById(Long id) {
-        Department department = departmentRepository.findById(id).get();
+        Department department = departmentRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Department", "id", id)
+        );
         return AutoDepartmentMapper.MAPPER.mapDepartmentToDto(department);
     }
 
     @Override
     public DepartmentDto updateDepartment(DepartmentDto departmentDto) {
-        Department department = departmentRepository.findById(departmentDto.getId()).get();
+        Department department = departmentRepository.findById(departmentDto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Department", "id", departmentDto.getId())
+        );
+
         department.setDepartmentName(departmentDto.getDepartmentName());
         department.setDepartmentDescription(departmentDto.getDepartmentDescription());
         department.setDepartmentCode(departmentDto.getDepartmentCode());
