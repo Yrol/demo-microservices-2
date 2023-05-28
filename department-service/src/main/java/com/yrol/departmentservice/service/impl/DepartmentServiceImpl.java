@@ -45,15 +45,24 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDto getDepartmentById(Long id) {
         Department department = departmentRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Department", "id", id)
+                () -> new ResourceNotFoundException("Department", "id", id.toString())
         );
+        return AutoDepartmentMapper.MAPPER.mapDepartmentToDto(department);
+    }
+
+    @Override
+    public DepartmentDto getDepartmentByCode(String code) {
+        Department department = departmentRepository.findByDepartmentCode(code).orElseThrow(
+                () -> new ResourceNotFoundException("Department", "code", code)
+        );
+
         return AutoDepartmentMapper.MAPPER.mapDepartmentToDto(department);
     }
 
     @Override
     public DepartmentDto updateDepartment(DepartmentDto departmentDto) {
         Department department = departmentRepository.findById(departmentDto.getId()).orElseThrow(
-                () -> new ResourceNotFoundException("Department", "id", departmentDto.getId())
+                () -> new ResourceNotFoundException("Department", "id", departmentDto.getId().toString())
         );
 
         department.setDepartmentName(departmentDto.getDepartmentName());
