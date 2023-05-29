@@ -1,4 +1,4 @@
-package com.yrol.employeeservice.dto;
+package com.yrol.employeeservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
