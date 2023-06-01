@@ -8,6 +8,10 @@ import com.yrol.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
@@ -19,5 +23,36 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = AutoEmployeeMapper.MAPPER.mapToEmployee(employeeDto);
         Employee savedEmployee = employeeRepository.save(employee);
         return AutoEmployeeMapper.MAPPER.mapEmployeeToDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeById(Long employeeId){
+        Optional<Employee> employee = employeeRepository.findById(employeeId);
+        return AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee.get());
+    }
+
+    @Override
+    public List<EmployeeDto> getAllEmployees() {
+        List<Employee> employees = employeeRepository.findAll();
+
+        return employees.stream().map((employee) -> AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public EmployeeDto updateEmployee(EmployeeDto employeeDto) {
+        Employee existingUser = employeeRepository.findById(employeeDto.getId()).get();
+        existingUser.setEmail(employeeDto.getEmail());
+        existingUser.setFirstName(employeeDto.getFirstName());
+        existingUser.setLastName(employeeDto.getLastName());
+        return AutoEmployeeMapper.MAPPER.mapEmployeeToDto(existingUser);
+    }
+
+    @Override
+    public void deleteEmployee(Long employeeId) {
+        Optional<Employee> employee = employeeRepository.findById(employeeId);
+        if(employee.isPresent()) {
+            employeeRepository.deleteById(employeeId);
+        }
     }
 }
