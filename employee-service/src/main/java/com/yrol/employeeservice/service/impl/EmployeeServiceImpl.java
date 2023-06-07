@@ -8,6 +8,7 @@ import com.yrol.employeeservice.exception.EmployeeAlreadyExistException;
 import com.yrol.employeeservice.exception.ResourceNotFoundException;
 import com.yrol.employeeservice.mapper.AutoEmployeeMapper;
 import com.yrol.employeeservice.repository.EmployeeRepository;
+import com.yrol.employeeservice.service.APIClient;
 import com.yrol.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 //    private RestTemplate restTemplate;
 
-    private WebClient webClient;
+//    private WebClient webClient;
+
+    private APIClient apiClient;
 
     @Override
     public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
@@ -53,10 +56,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        DepartmentDto departmentDto = responseEntity.getBody();
 
         // Getting the department of the employee by using WebClient (using block() for synchronous class)
-        DepartmentDto departmentDto = webClient.get()
-                .uri(("http://localhost:8080/api/departments/code/" + employee.getDepartmentCode()))
-                .retrieve().bodyToMono(DepartmentDto.class)
-                .block();
+//        DepartmentDto departmentDto = webClient.get()
+//                .uri(("http://localhost:8080/api/departments/code/" + employee.getDepartmentCode()))
+//                .retrieve().bodyToMono(DepartmentDto.class)
+//                .block();
+
+        // Getting the department of the employee by using Feign Client
+        DepartmentDto departmentDto = apiClient.getDepartmentByCode(employee.getDepartmentCode());
 
         EmployeeDto employeeDto = AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee);
 
