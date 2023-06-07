@@ -1,6 +1,7 @@
 package com.yrol.employeeservice.controller;
 
 
+import com.yrol.employeeservice.dto.APIResponseDto;
 import com.yrol.employeeservice.dto.EmployeeDto;
 import com.yrol.employeeservice.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -25,9 +26,9 @@ public class EmployeeController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") Long employeeId) {
-        EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
-        return ResponseEntity.ok(employeeDto);
+    public ResponseEntity<APIResponseDto> getEmployeeById(@PathVariable("id") Long employeeId) {
+        APIResponseDto employee = employeeService.getEmployeeById(employeeId);
+        return ResponseEntity.ok(employee);
     }
 
     @GetMapping
