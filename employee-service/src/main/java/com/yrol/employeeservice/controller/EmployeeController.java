@@ -32,8 +32,8 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeDto>> getEmployees() {
-        List<EmployeeDto> employees = employeeService.getAllEmployees();
+    public ResponseEntity<List<APIResponseDto>> getEmployees() {
+        List<APIResponseDto> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,11 +75,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDto> getAllEmployees() {
+    public List<APIResponseDto> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
 
-        return employees.stream().map((employee) -> AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee))
-                .collect(Collectors.toList());
+        List<APIResponseDto> responseDtos = new ArrayList();
+
+        for(Employee e : employees) {
+            DepartmentDto departmentDto = apiClient.getDepartmentByCode(e.getDepartmentCode());
+            responseDtos.add(new APIResponseDto(AutoEmployeeMapper.MAPPER.mapEmployeeToDto(e), departmentDto));
+        }
+
+//        return employees.stream().map((employee) -> AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee))
+//                .collect(Collectors.toList());
+
+        return responseDtos;
     }
 
     @Override
