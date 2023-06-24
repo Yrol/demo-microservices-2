@@ -7,6 +7,7 @@ import lombok.Setter;
 
 /**
  * DTO for holding Department DTO
+ * Used for auto mapping when calling Department services
  * **/
 
 @Setter
