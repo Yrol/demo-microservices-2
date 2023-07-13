@@ -21,8 +21,8 @@ A demo Spring Boot microservices application created in my free time for learnin
 
 
 ### Service Registry and Discovery using Spring Cloud Netflix Eureka Server
-The Spring Cloud Netflix Eureka Server has been used as the service Discovery server and the designated microservices have been registered as the clients (shown below). 
-Each microservice will be identified using the Spring Application Name in the properties file.
+The Spring Cloud Netflix Eureka Server has been used as the Service Discovery Server and the designated microservices have been registered as the clients (shown below). 
+Each microservice will be identified using the Spring Application Name in their properties file.
 
 [Service Registry module repo](https://github.com/Yrol/demo-microservices-2/tree/master/service-registry)
 
@@ -31,7 +31,7 @@ Each microservice will be identified using the Spring Application Name in the pr
 
 
 ### Spring Cloud API Gateway
-Spring Cloud Gateway has been within the project for request routing (to microservices) and also for load balancing.
+Spring Cloud Gateway has been used within the project for request routing (to microservices) as well as for load balancing.
 
 [API Gateway module repo](https://github.com/Yrol/demo-microservices-2/tree/master/api-gateway)
 
@@ -44,7 +44,9 @@ The Spring Cloud Bus library has also been used along with RabbitMQ for fetching
 without having to restart microservice each time when there's a config change. This will allow to pull the latest configs from Git and broadcast to 
 the designated (subscribed) microservices via RabbitMQ.
 
-[Config Server module repo](https://github.com/Yrol/demo-microservices-2/tree/master/config-server)
+[Config Server module repo](https://github.com/Yrol/demo-microservices-2/tree/master/config-server)<br/>
+[External configs repo](https://github.com/Yrol/demo-microservices-2-configs)
+
 
 ![alt text](https://i.imgur.com/nJFhcpf.png)
 
