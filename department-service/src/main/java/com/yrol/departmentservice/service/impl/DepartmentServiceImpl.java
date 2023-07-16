@@ -68,6 +68,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         department.setDepartmentName(departmentDto.getDepartmentName());
         department.setDepartmentDescription(departmentDto.getDepartmentDescription());
         department.setDepartmentCode(departmentDto.getDepartmentCode());
+
         return AutoDepartmentMapper.MAPPER.mapDepartmentToDto(departmentRepository.save(department));
     }
 

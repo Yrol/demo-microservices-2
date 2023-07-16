@@ -10,7 +10,6 @@ import com.yrol.employeeservice.mapper.AutoEmployeeMapper;
 import com.yrol.employeeservice.repository.EmployeeRepository;
 import com.yrol.employeeservice.service.APIClient;
 import com.yrol.employeeservice.service.EmployeeService;
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
@@ -110,7 +109,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingUser.setEmail(employeeDto.getEmail());
         existingUser.setFirstName(employeeDto.getFirstName());
         existingUser.setLastName(employeeDto.getLastName());
-        return AutoEmployeeMapper.MAPPER.mapEmployeeToDto(existingUser);
+
+        Employee updatedEmployee = employeeRepository.save(existingUser);
+
+        return AutoEmployeeMapper.MAPPER.mapEmployeeToDto(updatedEmployee);
     }
 
     @Override
