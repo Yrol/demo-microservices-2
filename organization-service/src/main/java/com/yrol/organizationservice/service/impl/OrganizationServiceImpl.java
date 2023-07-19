@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,26 +34,40 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<OrganizationDto> getAllOrganizations() {
-        return null;
+        List<Organization> organizations = organizationRepository.findAll();
+        return organizations.stream().map((organization) -> AutoOrganizationMapper.MAPPER.mapOrganizationToDto(organization))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public OrganizationDto getOrganizationDtoById(Long Id) {
-        return null;
+    public OrganizationDto getOrganizationById(Long id) {
+        Organization organization = organizationRepository.findById(id).orElseThrow(
+
+        );
+        return AutoOrganizationMapper.MAPPER.mapOrganizationToDto(organization);
     }
 
     @Override
-    public OrganizationDto getOrganizationByCode(String Code) {
-        return null;
+    public OrganizationDto getOrganizationByCode(String code) {
+        Organization organization = organizationRepository.findByOrganizationCode(code).orElseThrow(
+        );
+        return AutoOrganizationMapper.MAPPER.mapOrganizationToDto(organization);
     }
 
     @Override
     public OrganizationDto updateOrganization(OrganizationDto organizationDto) {
-        return null;
+        Organization organization = organizationRepository.findById(organizationDto.getId()).orElseThrow(
+        );
+
+        organization.setOrganizationCode(organizationDto.getOrganizationCode());
+        organization.setOrganizationDescription(organizationDto.getOrganizationDescription());
+        organization.setOrganizationName(organizationDto.getOrganizationName());
+
+        return AutoOrganizationMapper.MAPPER.mapOrganizationToDto(organization);
     }
 
     @Override
     public void deleteOrganization(Long id) {
-
+        organizationRepository.deleteById(id);
     }
 }

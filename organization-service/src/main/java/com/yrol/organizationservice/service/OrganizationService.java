@@ -8,7 +8,7 @@ import java.util.List;
 public interface OrganizationService {
     OrganizationDto saveOrganization(OrganizationDto organizationDto);
     List<OrganizationDto> getAllOrganizations();
-    OrganizationDto getOrganizationDtoById(Long Id);
+    OrganizationDto getOrganizationById(Long Id);
     OrganizationDto getOrganizationByCode(String Code);
     OrganizationDto updateOrganization(OrganizationDto organizationDto);
     void deleteOrganization(Long id);
