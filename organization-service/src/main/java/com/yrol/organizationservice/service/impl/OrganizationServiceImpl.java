@@ -2,6 +2,8 @@ package com.yrol.organizationservice.service.impl;
 
 import com.yrol.organizationservice.dto.OrganizationDto;
 import com.yrol.organizationservice.entity.Organization;
+import com.yrol.organizationservice.exception.OrganizationAlreadyExistsException;
+import com.yrol.organizationservice.exception.ResourceNotFoundException;
 import com.yrol.organizationservice.mapper.AutoOrganizationMapper;
 import com.yrol.organizationservice.repository.OrganizationRepository;
 import com.yrol.organizationservice.service.OrganizationService;
@@ -23,7 +25,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Optional<Organization> organizationWithCode = organizationRepository.findByOrganizationCode(organizationDto.getOrganizationCode());
 
         if(organizationWithCode.isPresent()) {
-//            throw new DepartmentAlreadyExistsException(organizationDto.getOrganizationCode());
+            throw new OrganizationAlreadyExistsException(organizationDto.getOrganizationCode());
         }
 
         //convert organization DTO to JPA entity and vice versa
@@ -42,7 +44,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationDto getOrganizationById(Long id) {
         Organization organization = organizationRepository.findById(id).orElseThrow(
-
+                () -> new ResourceNotFoundException("Organization", "id", id.toString())
         );
         return AutoOrganizationMapper.MAPPER.mapOrganizationToDto(organization);
     }
@@ -50,6 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationDto getOrganizationByCode(String code) {
         Organization organization = organizationRepository.findByOrganizationCode(code).orElseThrow(
+                () -> new ResourceNotFoundException("Organization", "code", code)
         );
         return AutoOrganizationMapper.MAPPER.mapOrganizationToDto(organization);
     }
@@ -57,6 +60,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationDto updateOrganization(OrganizationDto organizationDto) {
         Organization organization = organizationRepository.findById(organizationDto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Organization", "code", organizationDto.getId().toString())
         );
 
         organization.setOrganizationCode(organizationDto.getOrganizationCode());
