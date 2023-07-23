@@ -5,7 +5,7 @@ A demo Spring Boot microservices application created in my free time for learnin
 
 ## Application architecture
 
-![alt text](https://i.imgur.com/m2ZvRya.png)
+![](https://i.imgur.com/m2ZvRya.png)
 
 ## Tech Stack
 - Java 11
@@ -26,7 +26,7 @@ Each microservice will be identified using the Spring Application Name in their 
 
 [Service Registry module repo](https://github.com/Yrol/demo-microservices-2/tree/master/service-registry)
 
-![alt text](https://i.imgur.com/B9kJmm6.png)
+![](https://i.imgur.com/B9kJmm6.png)
 
 
 
@@ -35,10 +35,18 @@ Spring Cloud Gateway has been used within the project for request routing (to mi
 
 [API Gateway module repo](https://github.com/Yrol/demo-microservices-2/tree/master/api-gateway)
 
-![alt text](https://i.imgur.com/xIItoXb.png)
+![](https://i.imgur.com/xIItoXb.png)
 
 
 ### Centralized Configurations using Spring Cloud Config Server
+
+<strong>Prerequisites:</strong> Make sure the RabbitMQ is running on docker port 5672
+that is required for the bus refresh.
+
+```aidl
+docker run --rm -it -d -p 5672:5672 rabbitmq:3.11.0
+```
+
 A centralized cloud config server has been used for externalising the configs each microservice via Github.
 The Spring Cloud Bus library has also been used along with RabbitMQ for fetching new configs from the remote Git server 
 without having to restart microservice each time when there's a config change. This will allow to pull the latest configs from Git and broadcast to 
@@ -48,7 +56,7 @@ the designated (subscribed) microservices via RabbitMQ.
 [External configs repo](https://github.com/Yrol/demo-microservices-2-configs)
 
 
-![alt text](https://i.imgur.com/nJFhcpf.png)
+![](https://i.imgur.com/nJFhcpf.png)
 
 An example of bus refresh actuator endpoint for the Department microservice [POST].
 ```aidl
@@ -58,7 +66,17 @@ http://localhost:8080/actuator/busrefresh
 
 
 ### Distributed API request tracing
-To be updated.
+
+<Strong>Prerequisites: </strong>Make sure Zipkin is running in DOcker port 9441
+
+```aidl
+docker run -d -p 9441:9441 openzipkin/zipkin
+```
+
+Zipkin and Micrometer libs have been used for Distributed tracing, and the dashboard can be accessed via `http://localhost:9411/`. 
+The tracing probability and Zipkin endpoint have been configured in each microservice. 
+This setup can also capture internal calls from one microservice to another (ex: API-Gateway -> Employee service -> Department service).
+![](https://i.imgur.com/Y2K1E42.png)
 
 ### Microservices
 To be updated.

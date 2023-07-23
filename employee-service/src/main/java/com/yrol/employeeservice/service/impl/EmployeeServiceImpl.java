@@ -3,24 +3,24 @@ package com.yrol.employeeservice.service.impl;
 import com.yrol.employeeservice.dto.APIResponseDto;
 import com.yrol.employeeservice.dto.DepartmentDto;
 import com.yrol.employeeservice.dto.EmployeeDto;
+import com.yrol.employeeservice.dto.OrganizationDto;
 import com.yrol.employeeservice.entity.Employee;
 import com.yrol.employeeservice.exception.EmployeeAlreadyExistException;
 import com.yrol.employeeservice.exception.ResourceNotFoundException;
 import com.yrol.employeeservice.mapper.AutoEmployeeMapper;
 import com.yrol.employeeservice.repository.EmployeeRepository;
-import com.yrol.employeeservice.service.APIClient;
+import com.yrol.employeeservice.service.DepartmentClient;
 import com.yrol.employeeservice.service.EmployeeService;
+import com.yrol.employeeservice.service.OrganizationClient;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +32,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private WebClient webClient;
 
-    private APIClient apiClient;
+    private DepartmentClient departmentClient;
+    private OrganizationClient organizationClient;
 
     @Override
     public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
@@ -69,15 +70,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 //                .block();
 
         // Feign Client - Getting the department of the employee.
-        DepartmentDto departmentDto = apiClient.getDepartmentByCode(employee.getDepartmentCode());
+        DepartmentDto departmentDto = departmentClient.getDepartmentByCode(employee.getDepartmentCode());
+        OrganizationDto organizationDto = organizationClient.getOrganizationByCode(employee.getOrganizationCode());
 
         EmployeeDto employeeDto = AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee);
 
         APIResponseDto apiResponseDto = new APIResponseDto();
         apiResponseDto.setEmployee(employeeDto);
         apiResponseDto.setDepartment(departmentDto);
+        apiResponseDto.setOrganization(organizationDto);
 
         return apiResponseDto;
+    }
+
+    private DepartmentDto getDepartment(String departmentCode) {
+        return departmentClient.getDepartmentByCode(departmentCode);
     }
 
     /**
@@ -91,8 +98,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<APIResponseDto> responseDtos = new ArrayList();
 
         for(Employee e : employees) {
-            DepartmentDto departmentDto = apiClient.getDepartmentByCode(e.getDepartmentCode());
-            responseDtos.add(new APIResponseDto(AutoEmployeeMapper.MAPPER.mapEmployeeToDto(e), departmentDto));
+            DepartmentDto departmentDto = departmentClient.getDepartmentByCode(e.getDepartmentCode());
+            OrganizationDto organizationDto = organizationClient.getOrganizationByCode(e.getOrganizationCode());
+            responseDtos.add(new APIResponseDto(AutoEmployeeMapper.MAPPER.mapEmployeeToDto(e), departmentDto, organizationDto));
         }
 
 //        return employees.stream().map((employee) -> AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee))
@@ -109,6 +117,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingUser.setEmail(employeeDto.getEmail());
         existingUser.setFirstName(employeeDto.getFirstName());
         existingUser.setLastName(employeeDto.getLastName());
+        existingUser.setOrganizationCode(employeeDto.getOrganizationCode());
 
         Employee updatedEmployee = employeeRepository.save(existingUser);
 
@@ -134,13 +143,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeDto employeeDto = AutoEmployeeMapper.MAPPER.mapEmployeeToDto(employee);
 
         DepartmentDto departmentDto = new DepartmentDto();
-        departmentDto.setDepartmentName("");
-        departmentDto.setDepartmentCode("");
-        departmentDto.setDepartmentDescription("");
+        departmentDto.setDepartmentName("Test");
+        departmentDto.setDepartmentCode("Test");
+        departmentDto.setDepartmentDescription("Test");
+
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setOrganizationName("Test");
+        organizationDto.setOrganizationCode("Test");
+        organizationDto.setOrganizationDescription("Test");
+
 
         APIResponseDto apiResponseDto = new APIResponseDto();
         apiResponseDto.setEmployee(employeeDto);
         apiResponseDto.setDepartment(departmentDto);
+        apiResponseDto.setOrganization(organizationDto);
 
         return apiResponseDto;
     }
@@ -159,8 +175,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         departmentDto.setDepartmentCode("");
         departmentDto.setDepartmentDescription("");
 
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setOrganizationName("");
+        organizationDto.setOrganizationCode("");
+        organizationDto.setOrganizationDescription("");
+
         for(Employee e : employees) {
-            responseDtos.add(new APIResponseDto(AutoEmployeeMapper.MAPPER.mapEmployeeToDto(e), departmentDto));
+            responseDtos.add(new APIResponseDto(AutoEmployeeMapper.MAPPER.mapEmployeeToDto(e), departmentDto, organizationDto));
         }
         return responseDtos;
     }

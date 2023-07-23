@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,5 +24,8 @@ public class EmployeeDto {
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Must provide a valid email")
     private String email;
+
     private String departmentCode;
+
+    private String organizationCode;
 }

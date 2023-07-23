@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 //@FeignClient(url = "http://localhost:8080", value = "DEPARTMENT-SERVICE") // without load balancer
 @FeignClient(name = "DEPARTMENT-SERVICE") // With load balancer: will call the available Department Service instance (use case: multiple instances)
-public interface APIClient {
+public interface DepartmentClient {
 
     // Getting the department by code rest API call
     @GetMapping("api/departments/code/{department-code}")
     DepartmentDto getDepartmentByCode(@PathVariable("department-code") String departmentCode);
-
 }
