@@ -1,5 +1,6 @@
 package com.yrol.employeeservice.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,10 @@ import lombok.Setter;
 
 /**
  * DTO for holding Department DTO
- * Used for auto mapping when calling Department services
+ * Used for auto mapping when calling the Department services
  * **/
+
+@Schema(description = "Department Model which is used for automapping when calling the Department services")
 
 @Setter
 @Getter

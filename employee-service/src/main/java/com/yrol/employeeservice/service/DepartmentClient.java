@@ -1,6 +1,7 @@
 package com.yrol.employeeservice.service;
 
 import com.yrol.employeeservice.dto.DepartmentDto;
+import feign.Headers;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface DepartmentClient {
 
     // Getting the department by code rest API call
+    @Headers("Content-Type: application/json")
     @GetMapping("api/departments/code/{department-code}")
     @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
     DepartmentDto getDepartmentByCode(@PathVariable("department-code") String departmentCode);

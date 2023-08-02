@@ -14,6 +14,8 @@ A demo Spring Boot microservices application created in my free time for learnin
   - Spring Cloud API Gateway
   - Spring Cloud Config Server
   - Feign (HTTP Client)
+  - CircuitBreaker
+  - Swagger for API documentation
 - PL/SQL
 - RabbitMQ
 - Micrometer and Zipkin for distributed tracing
@@ -77,6 +79,12 @@ Zipkin and Micrometer libs have been used for Distributed tracing, and the dashb
 The tracing probability and Zipkin endpoint have been configured in each microservice. 
 This setup can also capture internal calls from one microservice to another (ex: API-Gateway -> Employee service -> Department service).
 ![](https://i.imgur.com/Y2K1E42.png)
+
+### Swagger API documentation
+Uses OpenAPI Specification - Version 3
+- Employee service - `http://localhost:8081/swagger-ui/index.html`
+- Department service - `http://localhost:8080/swagger-ui/index.html`
+- Organization service - `http://localhost:8083/swagger-ui/index.html`
 
 ### Microservices
 To be updated.
